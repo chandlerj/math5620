@@ -1,0 +1,99 @@
+\documentclass[10pt, AMS Euler]{article}
+\textheight=9.25in \textwidth=7in \topmargin=-.75in
+ \oddsidemargin=-0.25in
+\evensidemargin=-0.25in
+\usepackage{url}  % The bib file uses this
+\usepackage{graphicx} %to import pictures
+\usepackage{amsmath, amssymb}
+\usepackage{theorem, concrete, multicol, color}
+
+
+\setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
+\setlength{\floatsep}{5mm}
+\setlength{\parindent}{0em} % new paragraphs are not indented
+
+
+%%%%  SHORTCUT COMMANDS  %%%%
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\arc}{\rightarrow}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\blank}{\underline{\hspace{0.33in}}}
+\newcommand{\qand}{\quad and \quad}
+\newcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\dydx}{\ds \frac{d y}{d x}}
+\newcommand{\ddx}{\ds \frac{d}{d x}}
+\newcommand{\dvdx}{\ds \frac{d v}{d x}} 
+
+%%%%  footnote style %%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Chandler Justice - A02313187
+\end{flushright}
+\noindent \underline{\hspace{3in}}\\
+
+\textbf{Topics we will discuss in this class}\\
+\begin{itemize}
+    \item Finite Difference Methods (First 10 weeks; 5620)
+        \begin{itemize}
+            \item Steady state problems
+            \item initial problems
+        \end{itemize}
+    \item Build your own simulation (Last 5 weeks; 5910)
+\end{itemize}
+
+\textbf{Chapter 1:} Finite Difference Approximation\\
+
+\textit{Example:} $\frac{dA}{dt} = kA, A(0) = A_0$\\
+
+
+$\frac{1}{A} dA = k dt \rightarrow ln|A| = kt + c_0$\\
+
+$A(t) = e^{kt + c_0} = c_1 e^{kt} \rightarrow c_1 = A_0$\\
+
+$\boxed{A(t) = A_0 e^{kt}}$\\
+
+\textit{Example:} $\frac{dP}{dt} = \alpha P - \beta P^2, P(0) = P_0$\\
+
+\textit{Example - spring mass system:} $\frac{d^2 y}{dt^2} = \alpha \frac{dy}{dt} + ky = f(t), y(0) = y_0, \frac{dy}{dt}(0) = v_0$\\
+
+\textit{Example:} $y'' + \frac{P}{EI} y = 0, y(0) = 0, y(L) = 0$\\
+
+This example has the solution: $\boxed{y(x) = c_1 \cos(\lambda x) + c_2 \sin(\lambda x)},\\ assuming $y(L) = c_2 \sin(\lambda L) = 0, c_2 = 0, sin(\lambda L) = 0, \lambda L = n \pi$.\\
+
+This means $y_n(x) = c_2 \sin(\frac{\pi n}{L} x)$\\
+
+\textit{Example - Heat equation:} $\frac{\partial u}{\partial t} = k \frac{\partial^2 u}{\partial x^2},\\ u(x,0) = f(x), u(o, t) = g_1(t), u(', l) = g_2(l)$\\
+
+\textit{Example - Potential Equation:} $\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = \Delta u = f(x, y)$\\
+This a BVP, 2nd order, partial diff eq.\\
+
+\textit{Example - Conservation Laws:} $\frac{\partial u}{\partial t} + a \frac{\partial u}{\partial x} = 0$\\
+$u(x, o) = f(x), x \in \R$
+
+\textit{Example - Cahn-Hilliard Equation:} we just looked at the wikipedia page lol.\\
+
+\textbf{Definitions}\\
+\begin{itemize}
+    \item $f'(a) \approx \frac{f(x) - f(a)}{x - a}$. The difference quotient
+    \item Increment Notation: $x - a = h \rightarrow x = a + h \rightarrow f'(a) \approx \frac{f(a + h) - f(a)}{h}$
+\end{itemize}
+
+\noindent \underline{\hspace{3in}}\\
+
+\textbf{January 10, 2023}\\
+
+\textbf{Example:}
+
+\noindent \underline{\hspace{3in}}\\
+
+\end{document}
+

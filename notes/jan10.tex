@@ -1,0 +1,117 @@
+\documentclass[10pt, AMS Euler]{article}
+\textheight=9.25in \textwidth=7in \topmargin=-.75in
+ \oddsidemargin=-0.25in
+\evensidemargin=-0.25in
+\usepackage{url}  % The bib file uses this
+\usepackage{graphicx} %to import pictures
+\usepackage{amsmath, amssymb}
+\usepackage{theorem, concrete, multicol, color}
+
+
+\setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
+\setlength{\floatsep}{5mm}
+\setlength{\parindent}{0em} % new paragraphs are not indented
+
+
+%%%%  SHORTCUT COMMANDS  %%%%
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\arc}{\rightarrow}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\blank}{\underline{\hspace{0.33in}}}
+\newcommand{\qand}{\quad and \quad}
+\newcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\dydx}{\ds \frac{d y}{d x}}
+\newcommand{\ddx}{\ds \frac{d}{d x}}
+\newcommand{\dvdx}{\ds \frac{d v}{d x}} 
+
+%%%%  footnote style %%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Chandler Justice - A02313187
+\end{flushright}
+\noindent \underline{\hspace{3in}}\\
+
+\textbf{January 10, 2023}\\
+
+\textbf{Example:} We assume that $f$ has a derivative at $x = a$.
+
+$f'(a) = \lim_{x\to\infty} \frac{f(x) - f(a)}{x - a} \approx \frac{f(x) - f(a)}{x - a}, x \neq a$\\
+
+We can also say $x = a + h$ and we get $f'(a) = \lim_{h \to 0} \frac{f(a + h) - f(a)}{h} \approx \frac{f(a + h) - f(a)}{h}$\\
+
+\textit{Note:} in the textbook, they may refer to $a$ as $\bar{x}$\\
+
+We can then construct the equation $D_+ f(\bar{x}) = \frac{f(\bar{x} + h) - f(\bar{x})}{h}, h \geq h_0 \geq 0$\\
+
+\textbf{Example:} Maltheas Population Model\\
+
+\[ 
+    \begin{cases}
+        \frac{dA}{dt} = kA\\
+        A(0) = A_0\\
+    \end{cases}\\
+\]    
+\[    
+    \frac{dA}{dt} \approx \frac{A(t + h) - A(t)}{h}\\
+\]
+\[
+    A'(t) \approx D_+ A(t)\\
+\]   
+    \[   
+    \begin{cases}
+        \frac{A(t + h) - A(t)}{h} \approx kA(t^*)\\
+        A(0) = A_0
+    \end{cases}\\
+\] 
+\[   
+    h = \Delta t\\
+\]    
+\[
+    \frac{A(t + \Delta t) - A(t)}{h} \approx kA(t^*)\\
+\]    
+\[    A(t + \Delta t) \approx A(t) + k h A(t^*)\\ \]
+    
+\[    t = 0 \rightarrow A(\Delta t) \approx A(0) + k \Delta t A(t^*)\\ \]
+    
+\[    A(\Delta t) \approx A_0 + k h A_0\\
+\]
+
+\textbf{Example:} another model
+\[ 
+    \begin{cases}
+        \frac{dA}{dt} = kA\\
+        A(0) = a_0\\
+    \end{cases}
+\]
+
+We can then use a bunch of techniques for the approximation of the limit that we discuessed last semester. recall the \textit{forward, backwards, and central} difference quotients.\\
+
+
+\textbf{Errors in Our Approximations}\\
+
+\[|f'(\bar{x}) - D_+f(\bar{x})| \]
+\[= |f'(\bar{x}) - \frac{f(\bar{x} + h) - f(\bar{x})}{h}|\]
+\[f(\bar{x} + h) = f(\bar{x}) + f'(\bar{x}) (\bar{x} + h - \bar{x}) + \frac{1}{2}f''(\bar{x})(\bar{x} + h - \bar{x})^2 + ...\]
+\[f(\bar{x}) + h f'(\bar{x}) + \frac{1}{2} h^2 f''(\bar{x}) + ... \]
+\[= | f'(\bar{x}) - \frac{1}{h} (h f'(\bar{x}) + \frac{1}{2} f''(\zeta) h^2) \rightarrow |-\frac{1}{2} h f''(\zeta)| \]
+
+This allows us to establish the relationship
+\[|f'(\bar{x}) - D_+ f(\bar{x}) | \leq Ch \]
+
+
+\textbf{Homework:} compute the error in
+\[ |f'(\bar{x}) - D_- f(\bar{x})| \]
+
+\noindent \underline{\hspace{3in}}\\
+
+\end{document}
+
