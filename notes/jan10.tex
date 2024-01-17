@@ -5,7 +5,8 @@
 \usepackage{url}  % The bib file uses this
 \usepackage{graphicx} %to import pictures
 \usepackage{amsmath, amssymb}
-\usepackage{theorem, concrete, multicol, color}
+\usepackage{theorem, multicol, color}
+\usepackage{gfsartemisia-euler}
 
 
 \setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
@@ -22,7 +23,7 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\blank}{\underline{\hspace{0.33in}}}
 \newcommand{\qand}{\quad and \quad}
-\newcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\renewcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
 \newcommand{\dydx}{\ds \frac{d y}{d x}}
 \newcommand{\ddx}{\ds \frac{d}{d x}}
 \newcommand{\dvdx}{\ds \frac{d v}{d x}} 
@@ -40,7 +41,7 @@ Chandler Justice - A02313187
 \end{flushright}
 \noindent \underline{\hspace{3in}}\\
 
-\textbf{January 10, 2023}\\
+\textbf{January 10, 2024}\\
 
 \textbf{Example:} We assume that $f$ has a derivative at $x = a$.
 
@@ -113,5 +114,168 @@ This allows us to establish the relationship
 
 \noindent \underline{\hspace{3in}}\\
 
+\textbf{January 12, 2024}\\
+
+\textbf{Example:} $D_+ f(\bar{x}) = \frac{f(\bar{x} + h) - f(\bar{x})}{h} \approx f'(\bar{x})$
+
+\[err = |f'(x) - \frac{f(\bar{x} + h) - f(\bar{x})}{h}|\]
+\[= |f'(\bar{x}) - \frac{1}{h}(f(\bar{x}) + f'(\bar{x})h + \frac{1}{2}f''(\zeta)h^2) - f(\bar{x})|\]
+\[|-\frac{1}{2} h f''(\zeta)| \leq ch'\]
+
+
+The idea above is called a \textbf{local truncatoin error analysis}.\\
+\textbf{Implication:} To use this difference quotient and have
+\[err \leq Ch\]
+\textbf{Theorem:} $f$ must be twice continous differentiable on some interval containing $\bar{x}$\\
+
+\textbf{Example:}
+\[D_0f(\bar{x}) = \frac{f(\bar{x} + h) - f(x - h)}{2h} \]
+\[err = |f'(\bar{x}) - \frac{1}{2h}(f(\bar{x}) + hf'(\bar{x}) + \frac{1}{2}h^2f''(\bar{x}) + \frac{1}{6}h^3 f'''(\zeta_1)) - (f(\bar{x}) +hf'(\bar{x}) + \frac{1}{2} h^2f''(\bar{x}) - \frac{1}{6} h^3 f'''(\zeta_2)|\]
+\[= |- \frac{1}{12}h^2(f'(\zeta_1) + f'(\zeta_2)| \]
+\[= \frac{1}{12} h^2 |f'''(\theta)|\]
+\[\leq Ch^2\]
+
+where
+\[C = C(f'''(\zeta_1) + f'''(\zeta_2))\]
+
+
+Lets recap. We want to find 
+\[f'(\bar{x}) = D_+ f(\bar{x}) = \frac{1}{h}f(\bar{x} + h) - \frac{1}{h} f(x)\]
+
+
+\textbf{Example:} suppose $f'(\bar{x}) \approx a_{-1} f(\bar{x} - h) + a_0 f(\bar{x}) + a_1 f(\bar{x} + h)$
+
+This means
+
+\[f(\bar{x} h) = f(\bar{x}) + f'(\bar{x})(\bar{x} - h - \bar{x}) + \frac{1}{2}f''(\bar{x}) (\bar{x} -h - \bar{x})^2 + \frac{1}{6} f'''(\zeta_1)(\bar{x} - h - \bar{x})^3\]
+\[f(\bar{x}) = f(\bar{x})\]
+\[f(\bar{x} + h) = f(\bar{x}) + f'(\bar{x})h + \frac{1}{2}f''(\bar{x})h^2 + \frac{1}{6}f'''(\zeta_2) h^3\]
+\[f'(\bar{x}) = a_0(f(\bar{x}) + f'(\bar{x})h + \frac{1}{2}f''(\bar{x})h^2 + \frac{1}{6}f'''(\zeta_2) h^3) + a_0 f(\bar{x}) + a_1(f(\bar{x}) + f'(\bar{x})h + \frac{1}{2}f''(\bar{x})h^2 + \frac{1}{6}f'''(\zeta_2) h^3)\]
+\[= f(\bar{x})(a_{-1} + a_0 + a_1) + h f'(\bar{x}) (-a_{-1} + a_1) + \frac{1}{2}h^2f''(\bar{x}) (a_{-1} + a_0) + \frac{1}{6} (f'''(\zeta_1) + f'''(\zeta_2))h^3\]
+
+now, let
+\[a_{-1} + a_0 + a_1 = 0\]
+\[h(-a_{-1} + a_1) = 1\]
+\[h^2(a_{-1} + a_1) = 0 \rightarrow a_{-1} + a_1 = 0\]
+
+We can now use this system of equations to find $h$
+
+\[a_{-1} = - a_1\]
+\[h(a_1 + a_1) = 2h a_1 = 1 \rightarrow a_1 = \frac{1}{2h}\]
+\[a_{-1} = -\frac{1}{2h}\]
+\[a_0 = 0\]
+
+We can now put this all together
+
+\[f'(\bar{x}) = -\frac{1}{2h} f(\bar{x} - h) + \frac{1}{2h}f(\bar{x} + h)\]
+
+And we get back the \textbf{central difference theorem} (amazin').\\
+
+\textbf{Example:} 
+$
+\begin{cases}
+    \frac{dA}{dt} = A(t)\\
+    A(0) = A_0\\
+\end{cases}\\
+$
+\[\frac{dA}{dt} \approx \frac{A(t + h) - A(t - h)}{2h}\]
+
+
+\textbf{Example:} Define a function at a set of distributed points $x_1, x_2, ... x_n$ with the idea of approximating $u'(x)$ using
+\[\bar{u}'(\bar{x}) = c_1 u(x_1) + c_2u(x_2) + ... + c_n(x_n)\]
+\[|u'(x) - \sum_{k=1}^n c_k u(x_k)| \leq Ch^p\]
+\[u(x_i) = u(\bar{x}) + u'(\bar{x}) (x_i - \bar{x}) + \frac{1}{2} u''(\bar{x})(x_i - \bar{x})^2 + ...\]
+\[= \sum_{k=0}^n \frac{u^{(k)}(\bar{x})}{h!} (x_i - \bar{x})^2\]
+
+
+\noindent \underline{\hspace{3in}}\\
+
+\textbf{January 17, 2024}\\
+
+\textbf{Topic:} Errors\\
+
+\textbf{Example:} $d\hat{u}/dt = f(\hat{u}(t)); \hat{u}(0) = n \in \R$
+
+Find all $u(t)$ that approximates $\hat{u}(t)$, try F.D.\\
+
+\[d\hat{u}/dt = \frac{\hat{u}(t + h) - \hat{u}(t)}{h}\]
+\[
+    \begin{cases}
+        \frac{\hat{u}(t + h) - \hat{u}(t)}{h} \approx f(\hat{u}(t))\\
+         \hat{u}(0) = n
+     \end{cases}
+\]
+\[\hat{u}(t + h) \approx \hat{u}(t) + hf(\hat{u}(t)\]
+
+Define an approximation, u(t), by
+
+\[\frac{u(t + h) - u(t)}{h} f(u(t))\]
+\[u(t + h) = u(t) + hf(u(t))\]
+\[u(0) = \mu \Rightarrow u(u + h) = u(0) + hf(u(0))\]
+
+The error is defined as
+\[E = \hat{u}(t) - u(t)\]
+where $\hat{u}$ represents the approximation of $u$
+A measure of the error
+\[|E| = |\hat{u}(t) - u(t)| = abs.(E)\]
+
+\textbf{Example:} $\hat{z} = 2.2, z = 2.20345$\\
+\[E = 2.2 - 2.20345 = 0.00345 = |E|\]
+Now, suppose $z$ and $\hat{z}$ are in terms of meters, and we decide to change from meters to nanometres
+\[\hat{z} = 2.2 * 10^{9}, z = 2.20345 * 10^{9}, |E| = 0.00345 * 10^9 = 3.45 * 10^6 \]
+
+Now, lets suppose we wanted to transform from meters into kilometers
+\[\hat{z} = 2.2 * 10^{-3}, z = 2.20345 * 10^{-3}, |E| = 0.0345 * 10^{-3}\]
+This example is \textit{poorly scaled}.\\
+
+\textbf{Definition:} relative error
+\[E_{|e|} = \frac{|\hat{z} - z|}{|\hat{z}|}\]
+This gives us a \textit{dimensionless error}.\\
+
+The problems we will work in will be assumed to be \textit{properly scaled}. This allows us to use the \textit{absolute error} ($E_{abs} = |E| = |\hat{z} - z|$)\\
+
+\textbf{Definition:} Big-O notation\\
+
+If $f(h)$ and $g(h)$ are functions of $h$, then 
+\[f(h) = O(g(h))\]
+as $h \to 0$ if
+\[|\frac{f(h)}{g(h)}| \leq c; h\to0\]
+or
+\[|f(h)| \leq C|g(h)|\]
+
+\textbf{Example:} $|D_+ f(\bar{x}) - f'(\bar{x})|$
+
+\[= |f'(\bar{x}) - \frac{f(\bar{x} + h) - f(\bar{x})}{h}|\]
+\[\leq |1/2 h f''(\zeta)|\]
+\[\leq Ch\]
+\[\Rightarrow |f'(\bar{x}) - D_+ f(\bar{x}) \leq Ch \]
+\[\frac{|f'(\bar{x}) - D_+f(\bar{x})|}{h} \leq c\]
+\[|f'(\bar{x}) - D_+f(\bar{x})| = O(h)\]
+
+\textbf{Definition:} Little-o notation\\
+For o(h)
+\[f(h) = o(g(h)); \quad h \to 0\]
+if
+\[|\frac{f(h)}{g(h)}| \to 0\]
+for $h$ sufficiently small.\\
+
+\textbf{Example:} $2h^3 = O(h^2)$
+\[2h^3 / h2 = 2h < c; \quad h < 1/c\]
+
+\textbf{Example:} $2h^3 = o(h^2)$
+\[2h^3 / h^2 = 2h \to 0; \quad h\to0\]
+
+\textbf{Example:} $\sin(h) = O(h); \quad h\to 0$
+\[\sin(h) = h - h^3/3! + h^5/5! ...; \quad h \in h\]
+\[sin(h) < 1h = Ch \]
+
+\textbf{Example:} $\sin(h) = h + O(h) \Rightarrow \sin(h) - h = O(h)$
+\[(sin(h) - h)/h = O(n^3)\]
+
+\textbf{Example:} $\sqrt{h} = O(1) \Rightarrow \sqrt{h} \to 0 < Ch$
+\[\sqrt{h} = O(1) \to \sqrt{h} \ to 0 < Ch\]
+\[\sqrt{h} = o(1) \ to \sqrt{h} \to 0\]
+\[\sqrt{h} \neq O(h) \to \sqrt{h}/h \to 1/\sqrt{h}\]
+\noindent \underline{\hspace{3in}}\\
 \end{document}
 
