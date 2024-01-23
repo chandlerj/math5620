@@ -1,6 +1,6 @@
 import numpy as np
 import math
-def difference_coefficients(k, xbar, x):
+def difference_coefficients(k: int, xbar: float, x: np.array) -> np.array:
     # determine size of input points
     n = len(x)
     
@@ -24,7 +24,7 @@ def difference_coefficients(k, xbar, x):
     # return the coefficients as an array
     return c.flatten()
 
-def check_coefficients(coefficients, step, x):
+def check_coefficients(coefficients: np.array, step: float, x: float) -> np.array:
     n = len(coefficients)
     x_values = np.array([x + i * step for i in range(n)])
     Vandr = np.vander(x_values, increasing=True)
