@@ -1,0 +1,118 @@
+\documentclass[10pt]{article}
+\textheight=9.25in \textwidth=7in \topmargin=-.75in
+ \oddsidemargin=-0.25in
+\evensidemargin=-0.25in
+\usepackage{url}  % The bib file uses this
+\usepackage{graphicx} %to import pictures
+\usepackage{amsmath, amssymb}
+\usepackage{theorem, multicol, color}
+\usepackage{gfsartemisia-euler}
+
+\setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
+\setlength{\floatsep}{5mm}
+\setlength{\parindent}{0em} % new paragraphs are not indented
+
+
+%%%%  SHORTCUT COMMANDS  %%%%
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\arc}{\rightarrow}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\blank}{\underline{\hspace{0.33in}}}
+\newcommand{\qand}{\quad and \quad}
+\renewcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\dydx}{\ds \frac{d y}{d x}}
+\newcommand{\ddx}{\ds \frac{d}{d x}}
+\newcommand{\dvdx}{\ds \frac{d v}{d x}} 
+
+%%%%  footnote style %%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Chandler Justice - A02313187
+\end{flushright}
+\noindent \underline{\hspace{3in}}\\
+
+\textbf{January 19, 2024}\\
+
+\begin{center}
+        \textbf{Vandermonde matrix}
+\end{center}
+\[\begin{bmatrix}
+    1 & 1 & 1 & ... & 1\\
+    (x_1 - \bar{x}) & (x_2 - \bar{x}) & (x_3 - \bar{x}) & ... & (x_n - \bar{x})\\
+    (x_1 - \bar{x})^2 & (x_2 - \bar{x})^2 & (x_3 - \bar{x})^2 & ... & (x_n - \bar{x})^2\\
+    ... & ... & ... & ... & ...\\
+    (x_1 - \bar{x})^n & (x_2 - \bar{x})^n & (x_3 - \bar{x})^n & ... & (x_n - \bar{x})^n\\
+\end{bmatrix}
+\begin{bmatrix}
+c_1\\
+c_2\\
+...\\
+c_n\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+0\\
+1\\
+...\\
+0\\
+\end{bmatrix}\]
+\begin{itemize}
+    \item We can move the $1$ in the matrix in the vector on the RHS to compute different derivatives.
+    \item $n > k+1$ is required to get a good approximation of the derivative
+\end{itemize}
+
+
+\textbf{Example:} $\ds D_0 u(\bar{x}) = \frac{u(x + h) - u(x-h)}{2h}$\\
+
+Let $k = 1$, then we rewrite our approximation as
+\[C_1 u(x + h) + C_0 (x) + C_{-1}a(x-h)\]
+Now that we have rephrased our approximation, we can see $n = 3$ (where $n$ is the number of coefficients)\\
+
+\textbf{Chapter 2: Building methods for solving DEs}\\
+
+\textbf{Example:} Heat equation. Consider the flow of heat in a 1D rod of material that conducts heat. What happens as time progresses with the rod in regards to its temperature. Let the length of the rod be $L = 1$.
+
+The DE used to heat in relation to time is
+\[\frac{\partial u}{\partial t} = \frac{\partial}{\partial x}(k(x) \frac{\partial u}{\partial x} = f(x)) \]
+
+If $k$ is constant, then
+
+\[\frac{\partial u}{\partial t} = k \frac{\partial^2 u}{\partial x^2} + f(x)\]
+
+\underline{Steady state}
+\[\frac{\partial u}{\partial t} = 0\]
+\[\Rightarrow k\frac{\partial^2 u}{\partial x^2} - f(x) = 0\]
+\[\frac{d^2 u}{dx^2} = f(x) \Rightarrow u'' = f\]
+\[\Rightarrow u(0) = \alpha, u(1) = \beta\]
+
+\underline{Structured Stability}
+\[\begin{cases}
+    y'' + \frac{P}{EI} y = 0\\
+    y(0) = 0\\
+    y(c) = 0\\
+\end{cases}
+\]
+this problem has $\infty$ solutions, so it is a bad idea to use numerical methods on this DE. We will want to use finite difference methods to get around this.
+\newpage
+\underline{Finite Methods}
+\[u'' = f(x) \rightarrow u' = \int f(x)dx + C_1 = g(x) + C_1\]
+\[u = \int g(x) dx + C_1x + C_2\]
+
+\[u'' = \frac{u(x + h) -2a(x) + u(x + h)}{h^2} + E\]
+
+Need some points for our linear approx: take equally spaced points on $[0, 1]$
+\[h = \frac{1-0}{m} \Rightarrow h = 1/m\]
+\noindent \underline{\hspace{3in}}\\
+
+\end{document}
+
