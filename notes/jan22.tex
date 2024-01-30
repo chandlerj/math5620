@@ -293,6 +293,214 @@ We can implement this in code using
         u[k] = (b[k] - as1[k] * u[k+1]) / ad[k])
     end
 \end{verbatim}
+
+\textbf{January 26, 2024}\\
+
+\textbf{Example:} 
+\[\frac{\partial u}{\partial t} = \frac{\partial}{\partial x} h \frac{\partial u}{\partial x} + t(x, t)\]
+
+simplify to
+
+\[
+    \begin{cases}
+        u''(x) = f(x)\\
+        u(0) = \alpha\\
+        u(1) = \beta
+    \end{cases}
+\]
+
+which gives us
+
+\[\frac{u(x_j - h) - 2u(x_j) + u(x_j + h)}{h^2} \approx f(x_j)\]
+we will rerepsent this as
+\[\frac{U_{j-2} - 2U_j + U_{j+1}}{h^2} = f(x_j) = F_j\]
+
+We can compose this expression into a matrix with the shape
+
+\[ A =
+    \begin{bmatrix}
+        -2 & 1 & ... & 0\\
+        1 & -2 & ... & 0\\
+        0 & ... & 1 & -2\\
+    \end{bmatrix}
+    ,U = 
+    \begin{bmatrix}
+        U_1\\
+        U_2\\
+        ...\\
+        U_N\\
+    \end{bmatrix}
+    ,F =
+    \begin{bmatrix}
+        f_1 - \alpha / h^2\\
+        f_2 \\
+        ...\\
+        f_m - \beta/h^2
+    \end{bmatrix}
+\]
+Using this form allows us to use the \textit{Thomas algorithm}.\\
+\[\Rightarrow U = A^{-1} * F\]
+
+\textbf{Errors:}
+\begin{align*}
+    ||\hat{U} - U|| &\leq Ch^2\\
+    ||\hat{U} - U||_\infty &= max_{l \leq j \leq m} |\hat{u}_j - u_j\\
+    ||\hat{u} - U||_1 &= h * \sum_{j=1}^m |\hat{u}_j = u_j|\\
+    [||\hat{u} - U||_2 &= (h \sum_{j=1}^m (\hat{u}_j - u_j)^2)^{1/2} \rightarrow ||\hat{u} = U||_2^2\\
+\end{align*}
+
+\textit{We talked about jacobi iteration which we covered in substantial detail last semester, so look at those notes; specifically notes back from nov 2023}
+
+\textbf{N-n-n-new shit}\\
+\begin{align*}
+x^{k+1} &= D^{-1}(b - (L + D - D + U)x^{(k)}\\
+        &= D^{-1}(b - (L+D+U)x^{(k)})\\
+        &= D^{-1}(b - Ax^{(k)}) + x^{(k)}\\
+        &= D^{-1}r^{(k)} + x^{(k)}\\
+x^{(k+1)} &= x^{(k)} + D^{-1} r^{(k)}\\
+\end{align*}
+
+$Du$: if 
+\[Ax = b\]
+We derive the residual vector to be
+\[r = b - Ax\]
+If $r = 0 \rightarrow 0 = b - Ax$
+\[\rightarrow Ax = b\]
+
+We have two methods for solving $AU = F$
+\begin{enumerate}
+    \item Thomas algoritm (stupid)
+    \item Jacobi Iteration (also stupid)
+\end{enumerate}
+
+
+\underline{jacobi}\\
+\textit{input}  $A, b, x^0$\\
+\textit{initialize}  $r^0 = b - Ax^0$\\
+\textit{loop:}
+\begin{verbatim}
+    x_k = D_-1 * r_0 + x_0
+        = x_0 + D_-1 * r_0
+    r_1 = b - A * x_1
+    test: ||r_1|| -> 0
+\end{verbatim}
+\newpage
+\underline{Full matrix mutliplication algorithm}\\
+$Ax \rightarrow y$
+\begin{verbatim}
+    for i in range(m):
+        y[i] = 0.0
+        for j in range(m):
+            y[i] = y[i] + a[i][j] * x[j]
+        end
+    end
+\end{verbatim}
+We could prolly make this a bit faster
+\begin{verbatim}
+    for i in range(m):
+        sum = 0.0
+        for j in range(i-1, i+2):
+            sum = sum + A[i][j] + x[j]
+        end
+        y[i] = sum
+    end
+\end{verbatim}
+
+\textbf{January 29, 2024}\\
+
+We have a way to approximately solve these systems
+\[Au = F \Rightarrow u = A^{-1}F\]
+Use back-substituion to find $A^{-1}$ or Jacobi iteration.\\
+
+\underline{Methods:}
+\begin{itemize}
+    \item Gauss-Elimination with back substitution
+    \item jacobi interation
+\end{itemize}
+
+We want to figure out as $h \to 0$, what do we converge to?\\
+
+\textbf{Local Truncation Error}\\
+Our finite difference method is
+\[\begin{cases}
+\frac{U_{j-1} - 2U_j + U_{j+1}}{h^2} = f(x_j)\\
+U_0 = \alpha\\
+u_{m+1} = \beta\\
+\end{cases}\]
+The local truncation error is computed by substituting the exact solution $U(x_j)$ explicitily with taylor series.
+\begin{align*}
+    \tau_j = \tau(x_j) &= \frac{1}{h^2}(u(x_{j-1} - 2u(x_j) + u(x_{j+1}) - f(x_j)\\
+                       &= [u''(x_j) + \frac{1}{12}h^2u''''(x_j) + O(h^4)] - f(x_j)\\
+                       &= \frac{1}{12} h^2 u''''(x_j) + O(h^4)\\
+                       &\leq Ch^2
+\end{align*}
+We do not know $u''''(x_j)$, but we can assume $u''''(x_j)$ is independent of $h$. There will be $m$ LTEs (local truncation errors) we are concerned with.\\
+\newpage
+\textbf{Definition:} 
+\[\tau = A \hat{U} - F =
+\begin{bmatrix}
+\tau_1\\
+\tau_2\\
+...\\
+\tau_3\\
+\end{bmatrix}
+\Rightarrow A\hat{U} = F + \tau\]
+
+\textbf{Definition:} Global error
+\[E = U - \hat{U} \rightarrow ||E|| = ||U - \hat{U}||\]
+
+\[\begin{cases}
+    A\hat{U} - F = \tau\\
+    AU - F = 0
+\end{cases}\]
+\[(AU - F) - (A\hat{U} - F) = -\tau\]
+\[A(U - \hat{U}) = \tau\]
+\[AE = -\tau\]
+\[\frac{E_{j+1} - 2E_j + E_{j-1}}{h^2} = -tau_j\]
+\[E_0 = 0 \Rightarrow E_{m+1} = 0\]
+Given $\tau_j$ in $O(h^2)$ we want \underline{$||E|| \leq Ch^2$}.\\
+We can write a continous analogue to the ODE:
+\[\begin{cases}
+    e''(x) = -\tau(x)\\
+    e(x) = 0\\
+    e(1) = 0
+\end{cases} \Rightarrow \tau(x) \approx \frac{1}{12} h^2u''''(x)\]
+\[e'' = \int^1_0 \frac{1}{12}h^2 u''''(x) dx \Rightarrow e(x) = \frac{2}{12}h^2 u''\]
+
+\underline{Stability}\\
+
+given
+\[A^h E^h = -\tau^h \quad \text{where }h \text{ is the width of the mesh}\]
+\begin{align*}
+E^h &= -(A^h)^{-1} \tau^h\\
+||E^h|| &= ||(A^h)^{-1} \tau^h \\
+        &\leq ||(A^h)^{-1}|| ||\tau^h|| \rightarrow ||E^h|| \leq ||(A^h)^{-1}|| ||\tau_j||
+\end{align*}
+
+\textbf{Definition:} Suppose a finite difference method for a BVP give a sequence of matrix equations of the form $A^h U^h = F^h$, where $h$ is the mesh width. We say the method is \underline{stable} if $(A^h)^{-1}$ exists for all $h$ sufficiently small $(h < h_0)$ and a constant exists independent of $h$ such that
+\[||(A^h)^{-1}|| \leq C\]
+
+If $(LTE \to 0$ as $h \to 0)$ + stability $\Rightarrow$ \underline{Convergence}.\\
+
+\textbf{Matrix Norms.}
+
+\textbf{Defintition:} A \underline{norm} on a vector space is a function that satisifes three properties
+\begin{enumerate}
+    \item $||x|| > 0$ for all x in the V.S.
+    \item $||\alpha x|| = |\alpha| ||x||$ for all x and $\alpha \in \R$
+    \item $||x | g || \leq ||x|| + ||g||$
+    \item $||A B|| \leq ||A|| ||B||$
+\end{enumerate}
+
+If the norm satisfies (4), the norm is said to be a consistent norm.
+
+\textbf{Example:} $||(A^h)^{-1} \tau|| \leq ||(A^h)^{-1}|| ||\tau||$
+We will want individual norms:
+\begin{align*}
+    ||A||_1 &= max_{x \in \R_m} \frac{||Ax||}{AxU}\\
+||A||_p &= max \frac{||A_x||_p}{||x||_p}\\
+    ||A||_\infty &= max_{x \in \R_m} \frac{||Ax||_\infty}{||x||_\infty}\\
+\end{align*}
 \noindent \underline{\hspace{3in}}\\
 
 \end{document}
