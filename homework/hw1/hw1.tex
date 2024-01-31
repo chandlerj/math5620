@@ -1,0 +1,134 @@
+\documentclass[10pt]{article}
+\textheight=9.25in \textwidth=7in \topmargin=-.75in
+ \oddsidemargin=-0.25in
+\evensidemargin=-0.25in
+\usepackage{url}  % The bib file uses this
+\usepackage{graphicx} %to import pictures
+\usepackage{amsmath, amssymb}
+\usepackage{theorem, multicol, color}
+\usepackage{gfsartemisia-euler}
+
+\setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
+\setlength{\floatsep}{5mm}
+\setlength{\parindent}{0em} % new paragraphs are not indented
+\setcounter{MaxMatrixCols}{20}
+\usepackage{caption}
+\captionsetup[figure]{font=small}
+
+
+%%%%  SHORTCUT COMMANDS  %%%%
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\arc}{\rightarrow}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\blank}{\underline{\hspace{0.33in}}}
+\newcommand{\qand}{\quad and \quad}
+\renewcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\dydx}{\ds \frac{d y}{d x}}
+\newcommand{\ddx}{\ds \frac{d}{d x}}
+\newcommand{\dvdx}{\ds \frac{d v}{d x}} 
+
+%%%%  footnote style %%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Chandler Justice - A02313187
+\end{flushright}
+\noindent \underline{\hspace{3in}}\\
+
+\textbf{MATH5620:} Homework \#1\\
+\textbf{Due:} January 22, 2024 at 23:59\\
+
+\begin{enumerate}
+\item Write out the details for the accuracy analysis for
+
+$$
+  D_- f(\bar{x}) = \frac{f(\bar{x})-f(\bar{x}-h)}{h}
+$$
+
+Compute an expression for the error in terms of $h$ and a constant. What
+restrictions must be satisfied in order to use this difference.?
+
+\textbf{Solution:} We can utilize the following statement from the textbook to better understand how we can analyze the accuracy of our difference quotient
+
+\[u(\bar{x} + h) = u(\bar{x}) + hu'(\bar{x}) + \frac{1}{2}h^2u''(\bar{x}) + \frac{1}{6}h^3u'''(\bar{x}) + O(h^4)\]
+
+We can adapt this function to get a function that computes the error of our approximation by subtracting the derivative of this function from our finite difference. This will allow us to see the error in our approximation.\\
+
+Recall $D_{-}f(\bar{x})$ has the following Taylor series expansion
+\[D_{-}f(\bar{x}) = u'(\bar{x}) + \frac{1}{2}hu''(\bar{x}) + \frac{1}{6}h^2u'''(\bar{x}) + \frac{1}{24}h^3u''''(\bar{x}) + O(h^4)\]
+
+We are using the $O(h^k)$ term to symbolize the remaining unaccounted for terms in the Taylor series. So to compute the error we need to subtract the Taylor series of our exact equation from our approximation. We want
+\[|u(x + h) - D_{-}u(x)|  \leq Ch\]
+When we compute this difference we get the result
+\[\boxed{|u(x + h) - D_{-}u(x)| = \frac{1}{2}hf''(\zeta) \leq Ch}\]
+The restrictions we must set on this error is that $h$ must be representable with the precision we are working with (IE, floats, doubles, etc), and $u$ must be differentiable up to the number of terms we require.
+
+\item Write a code that returns the coefficients for a difference quotient
+   approximating the first derivative of a function at a specified point
+   $\bar{x}$ given an input array of points.
+
+
+\item Write a code that will return the coefficients of a derivative of a given 
+   order specified at a minimal number of points specified by the user.
+
+\textbf{Solution:} For both questions 2 and 3, I was able to use the same function since my function lets me specify the order of derivative I would like the constants for
+
+\begin{verbatim}
+import numpy as np
+import math
+def difference_coefficients(k: int, xbar: float, x: np.array) -> np.array:
+    # determine size of input points
+    n = len(x)
+    
+    # initialize the Vandermonde matrix with 1s
+    A = np.ones((n, n))
+    
+    # subtract xbar from each element and reshape to a row
+    xrow = (np.array(x) - xbar).reshape(1, -1)
+    
+    # construct the Vandermonde matrix
+    for i in range(2, n + 1):
+        A[i-1, :] = (xrow ** (i-1)) / math.factorial(i-1)
+    
+    # initialize the solution set
+    b = np.zeros((n, 1))
+    b[k] = 1
+    
+    # solve the linear system to determine the coefficients
+    c = np.linalg.solve(A, b)
+    print(b)    
+    # return the coefficients as an array
+    return c.flatten()
+\end{verbatim}
+
+\item Write a code that will determine the accuracy of a specified difference
+quotient. That is, instead of computing the coefficients, input the
+coefficients and determine the number of equations that should be satisfied. 
+
+\textbf{Solution:} I wrote the following function to validate the coefficients of a difference quotient
+\begin{verbatim}
+def check_coefficients(coefficients: np.array, step: float, x: float) -> np.array:
+    n = len(coefficients)
+    x_values = np.array([x + i * step for i in range(n)])
+    Vandr = np.vander(x_values, increasing=True)
+    res = np.linalg.solve(Vandr, x_values)
+    return res # should return array of all 0s and 1 one.
+\end{verbatim}
+
+Looking at the results of this validation, it looks like there is exactly 1 equation that is satisfied.
+\end{enumerate}
+
+
+\noindent \underline{\hspace{3in}}\\
+
+\end{document}
+
