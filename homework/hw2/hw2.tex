@@ -1,3 +1,56 @@
+\documentclass[10pt]{article}
+\textheight=9.25in \textwidth=7in \topmargin=-.75in
+ \oddsidemargin=-0.25in
+\evensidemargin=-0.25in
+\usepackage{url}  % The bib file uses this
+\usepackage{graphicx} %to import pictures
+\usepackage{amsmath, amssymb}
+\usepackage{theorem, multicol, color}
+\usepackage{gfsartemisia-euler}
+
+\setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
+\setlength{\floatsep}{5mm}
+\setlength{\parindent}{0em} % new paragraphs are not indented
+\setcounter{MaxMatrixCols}{20}
+\usepackage{caption}
+\captionsetup[figure]{font=small}
+
+
+%%%%  SHORTCUT COMMANDS  %%%%
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\arc}{\rightarrow}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\blank}{\underline{\hspace{0.33in}}}
+\newcommand{\qand}{\quad and \quad}
+\renewcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\dydx}{\ds \frac{d y}{d x}}
+\newcommand{\ddx}{\ds \frac{d}{d x}}
+\newcommand{\dvdx}{\ds \frac{d v}{d x}} 
+
+%%%%  footnote style %%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Chandler Justice - A02313187
+\end{flushright}
+\noindent \underline{\hspace{3in}}\\
+\textbf{MATH5620:} Homework \#2\\
+\textbf{Due:} February 2, 2024 @ 23:59\\
+
+I have solved the criteria for this assignment with the following code:
+\begingroup
+\makeatletter
+\@totalleftmargin = -1cm
+\begin{verbatim}
 import math
 from typing import Callable
 from scipy.sparse import diags
@@ -53,7 +106,8 @@ class FiniteDifference:
 
         # use 2nd order finite difference approx 
         for i in range(1,self.num_points - 1):
-            second_difference = (1 / self.h**2) * (self.fx(self.interval_points[i - 1]) - (2 * self.fx(self.interval_points[i])) + self.fx(self.interval_points[i + 1]))
+            second_difference = (1 / self.h**2) * (self.fx(self.interval_points[i - 1])
+\ - (2 * self.fx(self.interval_points[i])) + self.fx(self.interval_points[i + 1]))
             self.function_values.append(second_difference)
         self.function_values.append(self.right_endpoint)
    
@@ -81,3 +135,23 @@ def main():
     test_finite_solver()
 
 main()
+\end{verbatim}
+
+Running this program I get the following output
+
+\begin{verbatim}
+approx solutions for mesh size 4:
+[-0.11317098 -0.22634196 -0.40354777 -0.70177388]
+approx solutions for mesh size 8:
+[-0.08034362 -0.16068724 -0.24481941 -0.33645149 -0.43914205 -0.55622434
+ -0.69073843 -0.84536921]
+approx solutions for mesh size 16:
+[-0.04633856 -0.09267712 -0.13935242 -0.18669972 -0.23505128 -0.28473489
+ -0.33607244 -0.38937848 -0.44495878 -0.50310903 -0.56411351 -0.62824379
+ -0.69575758 -0.76689755 -0.84189025 -0.92094513]
+\end{verbatim}
+\endgroup
+\noindent \underline{\hspace{3in}}\\
+
+\end{document}
+
