@@ -1,0 +1,238 @@
+\documentclass[10pt]{article}
+\textheight=9.25in \textwidth=7in \topmargin=-.75in
+ \oddsidemargin=-0.25in
+\evensidemargin=-0.25in
+\usepackage{url}  % The bib file uses this
+\usepackage{graphicx} %to import pictures
+\usepackage{amsmath, amssymb, bbold}
+\usepackage{theorem, multicol, color}
+\usepackage{gfsartemisia-euler} % best font in da game
+\usepackage{tikz} % Graphs and other graphics
+
+\setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
+\setlength{\floatsep}{5mm}
+\setlength{\parindent}{0em} % new paragraphs are not indented
+\setcounter{MaxMatrixCols}{20}
+\usepackage{caption}
+\captionsetup[figure]{font=small}
+
+
+%%%%  SHORTCUT COMMANDS  %%%%
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\1}{\mathbb{1}}
+\newcommand{\arc}{\rightarrow}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\blank}{\underline{\hspace{0.33in}}}
+\newcommand{\qand}{\quad and \quad}
+\renewcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\dydx}{\ds \frac{d y}{d x}}
+\newcommand{\ddx}{\ds \frac{d}{d x}}
+\newcommand{\dvdx}{\ds \frac{d v}{d x}} 
+\renewcommand{\part}{\partial}
+%%%%  footnote style %%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Chandler Justice - A02313187
+\end{flushright}
+\noindent \underline{\hspace{3in}}\\
+
+\textbf{February 7, 2024}\\
+
+\underline{revisiting the heat equation}
+
+\[\begin{cases}
+\frac{\part u}{\part t} = \frac{\part}{\part x} (K \frac{\part u}{\part t} + 4(\gamma t)\\
+u(x, 0) = g(x)\\
+u(a, t) = \alpha(t)\\
+u(b, t) = \beta(t)
+\end{cases}\]
+
+\[\begin{cases}
+u'' = f \quad x \in (0,1)\\
+u(0) = \alpha\\
+u(1) = \beta\\
+\end{cases} \Rightarrow
+u'' = \frac{u(x+h) -2u(x) + u(x-h)}{h^2}\]
+
+\[\frac{U_{j-1} - 2U_j + U_{j+1}}{h^2} = f(x_j) \Rightarrow U_j \approx u(\alpha i) \Rightarrow A^h U^h = F^h\]
+Where $A$ is the fucking tridiagonal matrix, U is the approximation at a given value, and $F$ is the result of $U^h * A^h$.
+
+\[\therefore U^h = (A^h)^{-1} F^h\]
+This gives approximations at
+\[M_h = \{x_1,x_2,...,x_m\}, \quad h = \text{mesh size}\]
+
+\underline{Newmann condition}
+
+\[\begin{cases}
+u'' = f\\
+u'(0) = \sigma \Rightarrow (U_0) = \sigma\\
+u(1) = \beta
+\end{cases}\]
+
+We still set up a mesh
+\[M_k = \{x_0, x_1, x_2, ..., x_k\}, \quad h = 1/m+1\]
+
+For $j = 0$:
+
+\[\frac{U_{j-1} - 2U_j + U_{j+1}}{h^2} = \frac{U_{-1} - 2U_0 + U_1}{h^2}\]
+
+The idea is to modify the difference quotient for $j=0$.\\
+
+For $j = 1$: 
+
+\[\frac{U_{0} - 2U_1 + U_{2}}{h^2} = f(x_j)\]
+
+\textit{modifying differnce for $j = 0$}\\
+\textbf{Method 1:}\\
+\[u'(0) = \beta \approx \frac{U_1 - U_0}{h}\]
+\[A^hU^h = 1/h^2 \begin{bmatrix}
+    -h & h & ... & ... & ...\\
+    1 & -2 & 1 & 0 & ... & 0\\
+    0 & 1 & -2 & 1 & .... & 0\\
+    ... & ... & ... & ... & ...\\
+    0 & 0 & ... & 1 & -2 & 1\\
+    0 & ... & ... & ... & 0 & h^2
+\end{bmatrix}
+\begin{bmatrix}
+    U_0\\
+    U-1\\
+    ...\\
+    U_m\\
+    U_{m+1}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\sigma\\
+f(x_1)\\
+...\\
+f(x_{m-k})\\
+\beta
+\end{bmatrix}
+\]
+
+From we can analyze
+\[|u'(0) - \frac{u(h) - u(0)}{h}| \leq Ch'\]
+This forces all local truncation errors to be first order accurate, even though the central differences are more accurate.\\
+
+\textbf{Method 2:} introduce fictitious nodes\\
+This requires extrapolating outside of our domain, which we do not generally want to do.
+\[u'(0) = \sigma \approx \frac{U_1 - U_{-1}}{2h} \quad \text{LTE at } \bar{x} = 0 \rightarrow \text{2nd order accurate}\]
+\[\frac{U_1 - U_{-1}}{2h} = \sigma \Rightarrow U_{1} - 2h\sigma = U_{-1}\]
+From here, we solve for the fictitious node $U_{-1}$.\\
+
+\textbf{Method 3:} Interpolate within\\
+Try to take $0, h, 2h$ and interpolate a derivative within desired range.
+
+\[\frac{1}{h} \left(\frac{3}{2} U_0 - 2U_1 + \frac{1}{2}U_2\right) = \sigma\]
+
+Using this method, the structure of the matrix remains the same,
+\[ 1/h^2
+    \begin{bmatrix}
+        \frac{3}{2} h & -2h & \frac{1}{2}h & ... & 0 & 0\\
+        1 & -2 & 1 & ... & 0 & 0\\
+        0 & 1 & -2 & 1 & ... & 0\\
+        ...\\
+    \end{bmatrix}
+\begin{bmatrix}
+U_0\\
+U_1\\
+...\\
+U_m\\
+U_{m+1}
+\end{bmatrix}\]
+\newpage
+\textbf{February 9, 2024}\\
+
+\underline{Reordering of nodes}\\
+
+\[ 1/h^2
+    \begin{bmatrix}
+        \frac{3}{2} h & -2h & \frac{1}{2}h & ... & 0 & 0\\
+        1 & -2 & 1 & ... & 0 & 0\\
+        0 & 1 & -2 & 1 & ... & 0\\
+        ...\\
+    \end{bmatrix}
+\begin{bmatrix}
+U_0\\
+U_1\\
+...\\
+U_m\\
+U_{m+1}
+\end{bmatrix}
+=
+\begin{bmatrix}
+    f(x_1) - \frac{\alpha}{h^2}\\
+    f(x_2)\\
+    f(x_3)\\
+    ...\\
+    f(x_{m-1})\\
+    f(x_m) - \frac{\beta}{h^2}
+\end{bmatrix}
+\]
+
+We can reorder things in terms of odd terms first and then even terms after.\\
+
+\begin{align*}
+    j &= 1\\
+      &= \frac{1}{h^2}(- 2U_1 + U_2) = f(x_1) - \frac{\alpha}{h^2}\\
+    j &= 3\\
+      &=  \frac{1}{h^2}(U_2 - 2U_3 + U_4) = f(x_3) \\
+    j &= 5\\
+      &=  \frac{1}{h^2}(U_4 - 2U_5 + U_6) = f(x_3) \\
+      ...\\
+    j &= m-1\\
+      &= \frac{1}{h^2}(U_{m-2} - 2U_{m-1} + U_m) = f(x_{m-1}) - \frac{\alpha}{h^2}\\
+      &...\\
+    j &= 2\\
+      &=  \frac{1}{h^2}(U_1 - 2U_2 + U_3) = f(x_2) \\
+      &...\\
+    j &= m\\
+      &= \frac{1}{h^2}(U_m-1 - 2U_{m}) = f(x_{m}) - \frac{\beta}{h^2}\\
+\end{align*}
+
+Which results in a matrix following the shape
+\[1/h^2 =
+    \begin{bmatrix}
+    -2 & 0 & 0 & 1 & 0 & 0\\
+    0 & -2 & 0 & 1 & 1 & 0\\
+    0 & 0 & -2 & 0 & 1 & 1\\
+    1 & 1 & 0 & -2 & 0 & 0\\
+    0 & 1 & 1 & 0 & -2 & 0\\
+    0 & 0 & 1 & 0 & 0 & -2\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+    U_1\\
+    U_3\\
+    ...\\
+    U_{m-1}\\
+    U_2\\
+    ...\\
+    U_M
+\end{bmatrix}
+=
+\begin{bmatrix}
+    f(x_1) - \alpha/h^2\\
+    f(x_3)\\
+    ...\\
+    f(x_{m-1})\\
+    f(x_2)\\
+    ...\\
+    f(x_m)
+\end{bmatrix}
+\]
+This divides the matrix into 4 equal regions.\\
+\noindent \underline{\hspace{3in}}\\
+\end{document}
+

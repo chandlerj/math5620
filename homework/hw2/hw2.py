@@ -8,7 +8,7 @@ import numpy as np
 class FiniteDifference:
 
 
-    def __init__(self, left_endpoint: float, right_endpoint: float, num_points: int, fx: Callable) -> None:
+    def __init__(self, left_endpoint: float, right_endpoint: float, num_points: int,  fx: Callable, h_val = None) -> None:
         # initialize data
 
         self.function_values = []
@@ -29,9 +29,10 @@ class FiniteDifference:
         self.create_interval_points()
         
         self.fx = fx 
-
-        self.h = 1 / (1 + self.mesh_interval)
-
+        if h_val == None:
+            self.h = 1 / (1 + self.mesh_interval)
+        else:
+            self.h = h_val
 
     def determine_mesh_interval(self):
         return (self.right_endpoint - self.left_endpoint) / (self.num_points - 1)

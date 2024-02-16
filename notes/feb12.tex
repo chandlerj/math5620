@@ -1,0 +1,380 @@
+\documentclass[10pt]{article}
+\textheight=9.25in \textwidth=7in \topmargin=-.75in
+ \oddsidemargin=-0.25in
+\evensidemargin=-0.25in
+\usepackage{url}  % The bib file uses this
+\usepackage{graphicx} %to import pictures
+\usepackage{amsmath, amssymb, bbold}
+\usepackage{theorem, multicol, color}
+\usepackage{gfsartemisia-euler} % best font in da game
+\usepackage{tikz} % Graphs and other graphics
+
+\setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
+\setlength{\floatsep}{5mm}
+\setlength{\parindent}{0em} % new paragraphs are not indented
+\setcounter{MaxMatrixCols}{20}
+\usepackage{caption}
+\captionsetup[figure]{font=small}
+
+
+%%%%  SHORTCUT COMMANDS  %%%%
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\1}{\mathbb{1}}
+\newcommand{\arc}{\rightarrow}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\blank}{\underline{\hspace{0.33in}}}
+\newcommand{\qand}{\quad and \quad}
+\renewcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\dydx}{\ds \frac{d y}{d x}}
+\newcommand{\ddx}{\ds \frac{d}{d x}}
+\newcommand{\dvdx}{\ds \frac{d v}{d x}} 
+\renewcommand{\part}{\partial}
+%%%%  footnote style %%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Chandler Justice - A02313187
+\end{flushright}
+\noindent \underline{\hspace{3in}}\\
+
+\underline{Computational Convergence Study}\\
+
+As $h \to 0$ we want $||E^h|| \to 0$
+
+\[\underline{Uu}:
+\begin{cases} 
+u'' = f(x) \quad \text{on } (0,1) \Rightarrow (ku')' = f(x_j) + \epsilon\\
+u(0) = \alpha\\
+u(1) = \beta
+\end{cases}\]
+For $j = 1,2,...,m$
+\[\frac{1}{h^2} (U_{j-1} - 2U_j + U_{j+1} = f(x_j)\]
+
+We know if everything goes okay, that this process of discretization will generate an $O(h^2)$ approximation to the exact result.This is a mathematical result that leads to convergence, but there are errors occur in any program we might write/implement.\\
+\begin{itemize}
+    \item Roundoff errors (you cant do \textit{shit} about that)
+    \item measurement error
+    \item this will work as $h \to 0$
+    \item what if the problem is more complicated?
+    \end{itemize}
+
+    \underline{Computational convergence analysis}\\
+    \begin{itemize}
+        \item chose a decreasing sequence of $h$ that makes
+            \[\{h_0, \frac{h_0}{2}, \frac{h_0}{2^2}, \frac{h_0}{2^3}\}\]
+        \item for each $h \leq h_0$, we can compute an approximation of $U$
+            \[U = \begin{bmatrix}
+                U_1\\
+                U_2\\
+                ...\\
+                U_m\\
+            \end{bmatrix}\]
+        \item evaluate $u(x)$ of parts
+            \[\hat{U} = \begin{bmatrix}
+                u(x_j1)\\
+                u(x_j2)\\
+                u(x_j3)\\
+                ...\\
+                u(x_jm)\\
+            \end{bmatrix}\]
+        \item Compute $||E_h|| = ||U - \hat{U}||$
+        \item this gives us the data we need to determine convergence
+        \end{itemize}
+
+        \begin{align*}
+            ||E^h|| &\leq C h^2\\
+            \log ||E^h|| &\leq \log C + p \log h\\
+        \end{align*}
+
+        We can fit the error to ?????\\
+
+        \[\begin{matrix}
+        h & E^h & \log h &\log||E_h||\\
+        \hline
+        h_0 & ||E^{h_0}|| & \log(h_0) & \log||E^{h_0}\\
+        h_1 & ||E^{h_1}|| & \log(h_1) & \log||E^{h_1}\\
+        ...\\
+        h_n & ||E^{h_n}|| & \log(h_n) & \log||E^{h_n}\\
+    \end{matrix}\]
+    \[(x_i, y_i), i = 0,1,2,...,n \Rightarrow \text{ fit to a function}\]
+    \begin{align*}
+        y(x) &= a + px\\
+        y(x_0) &= a + px_0\\
+        y(x_1) &= a + px_1\\
+        ...
+        y(x_n) &= a + px_n\\
+    \end{align*}
+    Which can be represented as
+    \[\begin{bmatrix}
+        1 & x_0\\
+        1 & x_1\\
+        ...\\
+        1 & x_n\\
+    \end{bmatrix}
+\begin{bmatrix}
+    a\\
+    p
+    \end{bmatrix}
+    =
+\begin{bmatrix}
+    y(x_0)\\
+    y(x_1)\\
+    ...\\
+    y(x_m)
+    \end{bmatrix}
+    \Rightarrow
+    \bar{X} \begin{bmatrix} a\\ p\\ \end{bmatrix} = \bar{Y}
+        \]
+
+We can project this to the column space of $\bar{X}$ using
+
+\[\bar{X}^{-1} \bar{X} \begin{bmatrix} a\\ p\\ \end{bmatrix} = \bar{X}^{-1} \bar{Y}\]
+Which gives us the result
+\[\begin{bmatrix}
+\sum_{k=0}^n 1 & \sum_{k=0}^n x_n\\
+\sum_{k=0}^n h & \sum_{k=0}^n x_h^2
+\end{bmatrix}
+\begin{bmatrix}
+a\\
+p\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+\sum_{k=0}^n y_k\\
+\sum_{k=0}^n y_kx_k\\
+\end{bmatrix}
+\]
+
+We can write the following code to achieve this
+\begin{verbatim}
+a[1][1] = n + 1
+a_12 = 0.0
+for i in range(n + 1):
+    a_12 = a_12 + x[i]
+a_21 = a_12
+a22 = 0.0
+for i in range(nn):
+    a[2][2] = a[2][2] + x[i] * x[i]
+
+b[1] = 0
+b[2] = 0
+for i in range (nn):
+    b[1] = b[1] + y[i] * x[i]
+    b[2] = b[2] + y[i] * x[i]
+    \end{verbatim}
+
+\underline{matrix inversion}\\
+\[\begin{bmatrix}
+    a_{11} & a_{12}\\
+    a_{21} & a_{22}\\
+\end{bmatrix}
+\begin{bmatrix}
+    a\\
+    p\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+    b_1\\
+    b_2\\
+\end{bmatrix}
+\Rightarrow
+\begin{bmatrix}
+    a\\
+    p\\
+\end{bmatrix}
+=
+\frac{1}{a_{11}a_{21} - a_{21}a_{12}}
+\begin{bmatrix}
+    a_{22} & -a_{12}\\
+    -a_{21} & a_{11}\\
+\end{bmatrix}
+\begin{bmatrix}
+    b_1\\
+    b_2\\
+\end{bmatrix}
+\]
+\begin{align*}
+    \det A &= a_{11}a_{22} - a_{12}a{21}\\
+    a &= \frac{1}{\det A} (b_1 a_{22} - b_2 a_{12})\\
+    p &= \frac{1}{\det A} (-b_1 a_{21} + b_2 a_{11})\\
+\end{align*}
+what if we don't have $u$?
+\[\begin{matrix}
+        h & E^h & \log h &\log||E_h||\\
+        \hline
+        h_0 & ||E^{h_0}|| & ... & ...\\
+        h_1 & ||E^{h_1}|| & ... & ...\\
+        ...\\
+        h_m = \frac{h^0}{2^m} & ||E^{h_n}|| & \log(h_n) & \log||E^{h_n}\\
+    \end{matrix}\]
+We can use the $h_m$ to approximate $u$. We can then do the following to get the other needed approximations
+\[||U - U_k + U_k - \hat{U}|| \leq ||U - U_h|| + ||U_h - \hat{U}||\]
+
+
+\textbf{February 14, 2024}\\
+
+\underline{Errors:}
+
+\begin{align*}
+    ||E^h||_{\infty} &= \underset{1 \leq i \leq m}{max} |U_i - \hat{U}_i| \approx ||e(x)|| = \underset{a \leq x \leq b}{max} |u(x) - \hat{u}(x)|\\
+    ||E^h||_1 &= \sum_{j=1}^m |U_j - \hat{U}_j| \approx ||e(x)||_1 = \int | u(x) - \hat{u}(x)| dx\\
+    ||E^h||_2 &= (\sum_{j=1}^m |U_j - \hat{U}_j|^2)^{1/2} \approx ||e(x)||_2 = (\int_b^a |u(x) - \hat{u}(x)|^2 dx)^{1/2}
+\end{align*}
+
+\underline{PDEs}
+
+\[a_1(x,y) u_{xx} + a_2(x,y)u_{xy} + a_3(x,y)u_{yy} + ... + a_6 (x,y) = f\]
+
+\textbf{Def:} $\rho = a_2^2(x,y) - 4a_1(x,y) * a_3(x,y)$\\
+\[if: \begin{cases}
+    \rho < 0 &\to \text{ elliptic equation}\\
+    \rho = 0 &\to \text{ parabolic equation}\\
+    \rho > 0 &\to \text{ hyperbolic equation}
+\end{cases}\]
+
+\textbf{Ex:} Elliptic equation
+\begin{align*}
+    \frac{\part^2 u}{\part x^2} + \frac{\part^2 u}{\part y^2} &= f  \tag*{poisson equation}\\
+    \frac{\part^2 u}{\part x^2} + \frac{\part^2 u}{\part y^2} &= 0  \tag*{laplace equation}\\
+                                                              &\Rightarrow a_1 = 1, a_2 = 0, a_3 = 1\\
+    \frac{\part u}{\part t} &= \frac{\part^2 u}{\part x^2} \tag*{heat equation}\\
+                          &\Rightarrow  a_1 = 1, a_2 = 0 a_3 = 0\\
+\end{align*}
+
+\underline{Notation:}\\
+
+\begin{align*}
+\Delta u = \frac{\part^2 u}{\part x^2} + \frac{\part u^2}{\part y^2} &= \Delta \Delta u\\
+&= (\frac{\part}{\part x}, \frac{\part}{\part y}) (\frac{\part u}{\part x}, \frac{\part u}{\part y})\\
+&= \nabla^2 u\\
+\end{align*}
+
+\textbf{Mesh:} In 1-d we have
+\[x_j = a + j*h = a + jx \Delta x\]
+in 2-d we have
+
+\[\begin{matrix}
+   . &. &. &. & \Delta y\\
+   . &. &. &. & \Delta y\\
+   . &. &. &. & \Delta y\\
+   . &. &. &. & \Delta y\\
+    \Delta x & \Delta x & \Delta x & \Delta x\\
+\end{matrix}
+\]
+
+\underline{probabilities}
+\[\Delta u = f(x,y) \tag*{on $\Omega \in \R^m$}\]
+\[u\big|_{\part \Omega} = g(x,y)\]
+
+
+\textbf{February 16, 2024}\\
+
+\underline{We still talking about heat equations (Potential equation)}
+
+\begin{align*}
+    \Delta u &= f \text{ on } \Omega\\
+    u\big|_{\part \Omega} &= g \tag*{($\part$ is the boundary)}
+\end{align*}
+Solutions are called \underline{harmonic functions}. Building a linear system alike to the 1D problem, where are are finding the unknowns between two bounds. When we \textit{step it up} to 2D we are still finding the unknowns at specific points, we just add an axis.\\
+
+\[\begin{matrix}
+   . &. &. &. & 4\\
+   . &7 &8 &9 & 3\\
+   . &4 &5 &6 & 2\\
+   . &1 &2 &3 & 1\\
+   0 & 1 & 2& 3 & 4/0\\
+\end{matrix}
+\quad (i,j) \to ind \quad \Rightarrow ind = i + (j-1)*m
+\]
+Where $ind$ is a conversion from 2d to 1d indices.\\
+
+
+We can use the following variables to convert from 1D to 2D indices
+\[ind \to (i,j) \Rightarrow \quad j = \frac{ind}{m} \% 1, \quad i = ind - (j-1)*m\]
+
+\underline{spout stencil}
+
+\[\Delta u = \frac{\part^2 u}{\part x^2} + \frac{\part^2 u}{\part y^2} = \rho \]
+
+Which means the equation at (i,j) is 
+\[\frac{1}{h^2} (u(x_{i+1}, y_j) -2u(x_{i}, y_j) + u(x_{i-1}, y_j) + u(x_{i}, y_{j+1}) - 2u(x_{i}, y_j) + u(x_{i}, y_{j+1})) = f(x_i,y_j)\]
+
+When we build a system of equations it will look like
+
+\[A^h = \frac{1}{h^2} \begin{bmatrix}
+-4 & 1 & 0 & 0 & ... & 0 & 1 & 0 & ... & 0\\
+1 & -4 & 1 & 0 & ... & 0 & 0 & 1 & ... & 0\\
+0 & 1 & -4 & 1 & ... & 0 & 0 & 0 & 1 & ...\\
+1 & 0 & 0 & -4 & 1 & ... & 0 & 0 & ... & 1\\
+...\\
+...\\
+...\\
+...\\
+... & & & & & & & & & -4\\
+\end{bmatrix}
+\Rightarrow \frac{1}{h^2} \begin{bmatrix}
+    -4 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+    1 & -4 & 1 & 0 & 1 & 0 & 0 & 0 & 0\\
+    0 & 1 & -4 & 1 & 0 & 1 & 0 & 0 & 0\\
+    1 & 0 &  0 & -4 & 1 & 0 & 1 & 0 & 0\\
+    0 & 1 &  0 & 1 & -4 & 1 & 0 & 1 & 0\\
+    0 & 0 &  1 & 0 & 1 & -4 & 0 & 0  & 1\\
+    0 & 0 &  0 & 1 & 0 & 0 & -4 & 1  & 0\\
+    0 & 0 &  0 & 0 & 1 & 0 & 1 & -4  & 1\\
+    0 & 0 &  0 & 0 & 0 & 1 & 0 & 1  & -4\\
+\end{bmatrix}
+\begin{bmatrix}
+    U_1\\
+    U_2\\
+    U_3\\
+    U_4\\
+    U_5\\
+    U_6\\
+    U_7\\
+    U_8\\
+    U_9\\
+\end{bmatrix}
+= \begin{bmatrix}
+    F_1\\
+    F_2\\
+    F_3\\
+    F_4\\
+    F_5\\
+    F_6\\
+    F_7\\
+    F_8\\
+    F_9\\
+\end{bmatrix}
+\]
+We then can worry about stability and truncation error to determine convergence.
+\begin{align*}
+    \text{LTE: } \tau_{i,j}(h) &= ? = O(h^2)\\
+    \text{stability: } \lambda_{1,1} &= -2\pi + O(h^2)
+\end{align*}
+\[\therefore \text{contains number } \to K_1(A) = (\frac{8}{h^2} \frac{1}{2\epsilon}) = O\left(\frac{1}{h^2}\right)\]
+
+Each row represents the approximate equation at a point. We can then take the top 4x4 subset of this matrix to solve our system 
+
+\[\Rightarrow \begin{bmatrix}
+T & I & 0 & 0\\
+I & T & I & 0\\
+0 & I & T & I\\
+0 & 0 & I & T\\
+\end{bmatrix}
+\]
+
+
+\noindent \underline{\hspace{3in}}\\
+
+\end{document}
+
