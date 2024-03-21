@@ -288,10 +288,11 @@ in 2-d we have
 Solutions are called \underline{harmonic functions}. Building a linear system alike to the 1D problem, where are are finding the unknowns between two bounds. When we \textit{step it up} to 2D we are still finding the unknowns at specific points, we just add an axis.\\
 
 \[\begin{matrix}
-   . &. &. &. & 4\\
-   . &7 &8 &9 & 3\\
-   . &4 &5 &6 & 2\\
-   . &1 &2 &3 & 1\\
+    . &. &. &. &\vline 4\\
+    . &7 &8 &9 &\vline 3\\
+    . &4 &5 &6 &\vline 2\\
+    . &1 &2 &3 &\vline 1\\
+   \hline
    0 & 1 & 2& 3 & 4/0\\
 \end{matrix}
 \quad (i,j) \to ind \quad \Rightarrow ind = i + (j-1)*m
@@ -373,7 +374,67 @@ I & T & I & 0\\
 \end{bmatrix}
 \]
 
+\textbf{February 21, 2024 }\\
 
+\underline{Relevant topics for this class}\\
+
+Direct methods of determining finite differences
+\begin{itemize}
+    \item Gaussian Elimination \& back substitution
+    \item LU factorization
+    \end{itemize}
+Iterative Methods
+\begin{itemize}
+    \item Jacobi Iteration
+    \item Gauss-sidel elimination
+    \item SOR
+    \item Gradient methods
+    \item Conjugate-gradients
+    \end{itemize}
+Preconditioning\\
+
+\underline{Approximations}
+\begin{enumerate}
+    \item LTE $\to 0 \quad a h \to 0$
+    \item stability
+    \end{enumerate}
+
+\underline{Local Truncation Error}\\
+\[\Delta u = u_{xx} + u_{yy} = f \Rightarrow \frac{U_{i+i, j} - 2U_{i,j} U_{i-1, j}}{h^2} + \frac{U_{i, j+1} - 2U_{i,j} U_{i, j-1}}{h^2} = f_{i,j}\]
+\[-\tau_{i,j} =  \frac{U_{i+i, j} - 2U_{i,j} U_{i-1, j}}{h^2} + \frac{U_{i, j+1} - 2U_{i,j} U_{i, j-1}}{h^2} = f_{i,j}\]
+
+\[\frac{1}{h^2} u_{i+1, j} = u_{i,j} + h(u_x)_{i,j} + \frac{1}{2}h^2(u_{xx})_{i,j} + \frac{1}{6} h^3 (u_{xxx})_{i,j} + \frac{1}{24} h^4 (u_{xxxx})_{i,j} + ...\]
+\[\frac{1}{h^2} u_{i-1, j} = u_{i,j} - h(u_x)_{i,j} + \frac{1}{2}h^2(u_{xx})_{i,j} - \frac{1}{6} h^3 (u_{xxx})_{i,j} + \frac{1}{24} h^4 (u_{xxxx})_{i,j} + O(h^4)\] 
+\[-\frac{4}{h^2} u_{i,j} = u_{i,j}\]
+\[\frac{1}{h^2} u_{i, j + 1} = u_{i,j} + h(u_y)_{i,j} + \frac{1}{2}h^2(u_{yy})_{i,j} + \frac{1}{6} h^3 (u_{yyy})_{i,j} + \frac{1}{24} h^4 (u_{yyyy})_{i,j} + O(h^4)\] 
+\[\frac{1}{h^2}u_{i, j - 1} = u_{i,j} - h(u_y)_{i,j} + \frac{1}{2}h^2(u_{yy})_{i,j} - \frac{1}{6} h^3 (u_{yyy})_{i,j} + \frac{1}{24} h^4 (u_{yyyy})_{i,j} + O(h^4)\]
+\[\Rightarrow \frac{h^2 (u_{xx})_{i,j} + h^2 (u_{yy})_{i,j}}{h^2}\]
+
+all this bullshit gives us
+\[\tau_{i,j} = (u_{xx})_{i,j} + (u_{yy})_{i,j} - f_{i,j} + O(h^3)\]
+
+For the problem we are trying to solve
+
+\[A^h E^h = -\tau^h\]
+
+We can now determine the stability using
+\[||A^h||_2 \leq C\]
+and
+\[||A^hE^h|| \leq ||A_h||* ||E^h|| \Rightarrow ||A^hE^h|| \leq ||\tau^h||\]
+\[\Rightarrow ||(A^h)^{-1} \tau^h|| \leq ||(A^h)^{-1}||_2 * ||\tau^h|| \leq C * O(h^2)\]
+
+Then our error presents inself as
+\[\lambda_{1,1} = -2\pi^2 + O(h^2) \Rightarrow p((A^h)^{-1}) = \frac{1}{\lambda_{1,1}} = -\frac{1}{2\pi^2}\]
+\[\kappa(A) = ||A||_2 * ||A^{-1}||_2 = \lambda_{m,m} * \lambda_{1,1} \]
+
+\underline{Iterative methods}\\
+
+\textit{Jacobi Method}\\
+\[\frac{1}{h^2}(U_{i+1, j} -2U_{i,j} + U_{i,1,j}) + \frac{1}{h^2}(U_{i, j+ 1} -2I_{i,j} + U_{i,j+1})\]
+In code...
+\begin{verbatim}
+4 * U[i][j] = U[i+1][j] + U[i][j-1] + U[i][j+1] - f[i][j] * h**2
+\end{verbatim}
 \noindent \underline{\hspace{3in}}\\
 
 \end{document}

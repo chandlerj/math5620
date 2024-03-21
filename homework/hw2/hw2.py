@@ -49,8 +49,7 @@ class FiniteDifference:
         k = [np.ones(self.num_points-1),-2*np.ones(self.num_points),np.ones(self.num_points-1)]
         offset = [-1,0,1]
         self.matrix = diags(k,offset).toarray()
-
-
+        
     def evaluate_function(self, x):
         return self.fx(x)
 
