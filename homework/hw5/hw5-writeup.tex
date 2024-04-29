@@ -1,0 +1,130 @@
+\documentclass[10pt]{article}
+\textheight=9.25in \textwidth=7in \topmargin=-.75in
+ \oddsidemargin=-0.25in
+\evensidemargin=-0.25in
+\usepackage{url}  % The bib file uses this
+\usepackage{graphicx} %to import pictures
+\usepackage{amsmath, amssymb, bbold}
+\usepackage{theorem, multicol, color}
+\usepackage{gfsartemisia-euler} % best font in da game
+\usepackage{tikz} % Graphs and other graphics
+
+\setlength{\intextsep}{5mm} \setlength{\textfloatsep}{5mm}
+\setlength{\floatsep}{5mm}
+\setlength{\parindent}{0em} % new paragraphs are not indented
+\setcounter{MaxMatrixCols}{20}
+\usepackage{caption}
+\captionsetup[figure]{font=small}
+
+
+%%%%  SHORTCUT COMMANDS  %%%%
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\1}{\mathbb{1}}
+\newcommand{\arc}{\rightarrow}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\blank}{\underline{\hspace{0.33in}}}
+\newcommand{\qand}{\quad and \quad}
+\renewcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\dydx}{\ds \frac{d y}{d x}}
+\newcommand{\ddx}{\ds \frac{d}{d x}}
+\newcommand{\dvdx}{\ds \frac{d v}{d x}} 
+
+%%%%  footnote style %%%%
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Chandler Justice - A02313187
+\end{flushright}
+\noindent \underline{\hspace{3in}}\\
+\textbf{MATH5620} Homework \#5 \\
+\textbf{Due:} April 30, 2024 @ 23:59\\
+
+\textbf{Question 1:} For the Logisitic Equation, defined in Question 2, write out the details for finding the carrying capacity for the system. You should be able to do this without solving the ODE. Build a code that will return the carrying capacity of the population being modeled given appropriate input(s).\\
+
+\textbf{Solution 1:} I wrote the following code to determine the carrying capacity:
+\begin{verbatim}
+def determine_carrying_capacity(a, b):
+    return a/b
+\end{verbatim}
+This equation first takes the growth rate divided by the decay rate. This gives us the carrying capacity of the ODE in question.\\
+
+\textbf{Question 2:} Write a code that will implement the Explicit Euler Method on the Logisitic equation, $$ \frac{dP}{dt} = \alpha\ P - \beta\ P^2 $$ with $P(0) = 10$. Test your code using the following cases:
+\begin{itemize}
+    \item $\alpha = 1.5, \beta = 0.001$\\
+    \item $\alpha = 1.5, \beta = 0.01$\\
+    \item $\alpha = .15, \beta = 0.001$\\
+\end{itemize}
+Make sure $\Delta t$ is small enough to be able to resolve the solution and see that the carrying capacity is acheived.\\
+
+\textbf{Solution 2:} I wrote the following code that utilizes the explicit Euler method:
+\begin{verbatim}
+def explicit_euler(a, b, h, p0, function):
+
+    time_step = np.arange(0, 100, h)
+    P = np.zeros(len(time_step)) # stores state at a given time step
+    P[0] = p0
+    
+    for i in range(0, len(P) -1):
+        P[i + 1] = P[i] + h*function(a, b, P[i])
+
+    return P
+\end{verbatim}
+which returns the following results given the requested inputs:
+\begin{verbatim}
+a = 1.5, b = 0.001: [  10.           10.149        10.30020498 ... 1500.         1500.  1500.        ]
+a = 1.5, b = 0.01: [ 10.          10.14        10.28181804 ... 150.         150. 150.        ]
+a = 0.15, b = 0.001: [ 10.          10.014       10.0280182  ... 149.99935933 149.9993603 149.99936126]
+ \end{verbatim}
+ These results line up with the expected carrying capacity.
+\newpage
+ \textbf{Question 3:} Repeat the work in Question 1 using the Implicit Euler Method. Use some algebra to figure out how to write out the algoritihm. As discussed in class you will need to determine an appropriate for for the left hand side of the equation.
+
+ \textbf{Solution 3:} I wrote the following code to implement the Implicit Euler Method:
+ \begin{verbatim}
+def implicit_euler(a, b, h, p0, function):
+    
+    time_step = np.arange(0, 100, h)
+    P = np.zeros(len(time_step))
+    P[0] = p0
+    explicit_results = explicit_euler(a, b, h, p0, function)
+    
+    for i in range(0, len(P) - 1):
+        P[i + 1] = P[i] + (h * function(a, b, explicit_results[i + 1]))
+
+    return P
+ \end{verbatim}
+ The results between this method and the explicit method are basically identical.\\
+
+ \textbf{Question 4:} Repeat the work in Question 1. using a predictor-corrector method defined by explicit Euler for the prediction and implicit Euler for the correction step.
+
+ \textbf{Solution 4:} Here is my implementation of the predictor-corrector method:
+ \begin{verbatim}
+def trapezoid_euler(a, b, h, p0, function):
+    
+    time_step = np.arange(0, 100, h)
+    P = np.zeros(len(time_step))
+
+    P[0] = p0
+
+    for i in range(0, len(P) - 1):
+        predicate = P[i] + h * function(a, b, P[i])
+        corrector = P[i] + h/2 * (function(a, b, P[i]) + function(a, b, predicate))
+        P[i + 1] = corrector
+    return P
+ \end{verbatim}
+
+ Which further verifies the results obtained in question 2.\\
+\noindent \underline{\hspace{3in}}\\
+
+\end{document}
+

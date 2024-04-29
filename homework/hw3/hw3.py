@@ -81,6 +81,7 @@ class FiniteDifference:
         for point in self.interval_points:
             exact_solutions.append(self.exact_function(point))
         # find error between approx soln and exact soln
+        print(exact_solutions)
         for i, solution in enumerate(exact_solutions):
             error_at_term += (abs(self.approx_solutions[i] - solution)**2)
         # compute l2-norm
@@ -174,7 +175,7 @@ def test_finite_solver():
     display_data(solution_sets)
 
 def main(): 
-    #test_finite_solver()
-    print(diff_coeffs(5, 0.0, 1.0, -1.0))
+    test_finite_solver()
+    print(diff_coeffs(4, 0.0, 1.0, 0.0))
 
 main()
